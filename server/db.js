@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongoDB = "mongodb+srv://aayushsomwanshi21:altair2104@cluster0.gyt1hyu.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = "mongodb+srv://aayushsomwanshi21:altair2104@cluster0.gyt1hyu.mongodb.net/Testing?retryWrites=true&w=majority&appName=Cluster0";
 
 async function connectDB() {
     try {
