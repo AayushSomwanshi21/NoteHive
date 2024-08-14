@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { useContext, useState } from "react"
 import NoteContext from "../context/notes/NoteContext";
 
-const AddNote = () => {
+const AddNote = (props) => {
     const context = useContext(NoteContext);
     const { addNote } = context;
     const [note, setNote] = useState({ title: "", description: "", tag: "" });
@@ -12,6 +12,7 @@ const AddNote = () => {
         event.preventDefault();
         addNote(note.title, note.description, note.tag);
         setNote({ title: "", description: "", tag: "" });
+        props.showAlert("Note added successfully", "success");
     }
     const onChange = (event) => {
         setNote({ ...note, [event.target.name]: event.target.value });

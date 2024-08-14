@@ -5,8 +5,11 @@ import AddNote from "./AddNote";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from 'react-router-dom'
 
-const Notes = () => {
+const Notes = (props) => {
+
+    const navigate = useNavigate();
 
     // Modal States
     const [show, setShow] = useState(false);
@@ -26,6 +29,7 @@ const Notes = () => {
     const updatenote = (note) => {
         ref.current.click()
         setNote({ id: note._id, etitle: note.title, edescription: note.description, etag: note.tag });
+
     }
 
     // Edit note states
@@ -35,6 +39,7 @@ const Notes = () => {
         event.preventDefault();
         editNote(note.id, note.etitle, note.edescription, note.etag);
         setNote({ etitle: "", edescription: "", etag: "" });
+        props.showAlert("Updated Successfully", "success");
         handleClose()
     }
     const onChange = (event) => {
@@ -42,13 +47,19 @@ const Notes = () => {
     }
 
     useEffect(() => {
-        getNotes();
+        if (localStorage.getItem('token')) {
+            getNotes();
+        }
+        else {
+            navigate("/login");
+        }
+
     }, []);
 
     return (
         <>
             <div>
-                <AddNote />
+                <AddNote showAlert={props.showAlert} />
                 <Button className="d-none" variant="primary" onClick={handleShow} ref={ref}>
                     Edit
                 </Button>
@@ -80,7 +91,7 @@ const Notes = () => {
                         {notes.length === 0 && "No notes to display"}
                     </div>
                     {notes.map((note) => {
-                        return <NoteItem key={note._id} note={note} updatenote={() => updatenote(note)} />
+                        return <NoteItem key={note._id} note={note} updatenote={() => updatenote(note)} showAlert={props.showAlert} />
                     })}
                 </div>
             </div>

@@ -16,6 +16,7 @@ router.post('/createuser', [
 
 ], async (req, res) => {
 
+    let success = false
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -41,8 +42,9 @@ router.post('/createuser', [
             }
         }
         const authtoken = jwt.sign(data, JWT_SECRET);
-        console.log(authtoken);
-        res.json({ authtoken: authtoken }); //{authtoken}
+        //console.log(authtoken);
+        success = true
+        res.json({ success: success, authtoken: authtoken }); //{authtoken}
         //res.json(user);
 
     } catch (error) {
@@ -62,8 +64,10 @@ router.post('/login', [
 
 ], async (req, res) => {
 
+    let success = false
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        success = false
         return res.status(400).json({ errors: errors.array() });
     }
 
@@ -72,11 +76,13 @@ router.post('/login', [
 
         let user = await User.findOne({ email });
         if (!user) {
+            success = false
             return res.status(400).json({ error: "Please Login with correct credentials" });
         }
         const compare_pass = await bycrypt.compare(password, user.password);
 
         if (!compare_pass) {
+            success = false
             return res.status(400).json({ error: "Please Login with correct credentials" });
         }
 
@@ -86,8 +92,9 @@ router.post('/login', [
             }
         }
         const authtoken = jwt.sign(data, JWT_SECRET);
+        success = true
         //console.log(authtoken);
-        res.json({ authtoken: authtoken });
+        res.json({ success: success, authtoken: authtoken });
 
     } catch (error) {
         console.log(error.message);
